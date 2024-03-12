@@ -1,0 +1,156 @@
+package org.example;
+
+
+import org.apache.commons.math3.distribution.NormalDistribution;
+import org.example.interfaces.DataGenerator;
+import org.example.interfaces.Sorter;
+import org.example.mergeSort.MergeSort;
+
+import java.util.*;
+
+public class RandomMatrixGenerator {
+
+    private static Map<String, SortResult> resultsMap = new HashMap<>();
+    DataGenerator generator = new NormalDistributionGenerator();
+    Sorter sorter = new MergeSort();
+
+    // Warm-up JVM
+    Benchmark benchmark = new Benchmark(sorter);
+    benchmark.warmUpJVM(warmUpRounds, 1000); // Example warm-up
+
+/*    private static void warmUpJVM(int round) {
+        System.out.println("Starting JVM Warm-up...");
+        int warmUpSize = 1000;
+        Double[] warmUpData = new Double[warmUpSize];
+        Random random = new Random();
+
+        for (int i = 0; i < warmUpSize; i++) {
+            warmUpData[i] = random.nextDouble() * warmUpSize;
+        }
+
+        for (int i = 0; i < round; i++) {
+            Double[] copy = Arrays.copyOf(warmUpData, warmUpData.length);
+            MergeSort.sort(copy);
+        }
+
+        System.out.println("JVM Warm-up completed.");
+    }*/
+
+/*    private static Double[] generateNormalData(int dataSize, double mean, double variance) {
+        double standardDeviation = Math.sqrt(variance);
+        NormalDistribution distribution = new NormalDistribution(mean, standardDeviation);
+        Double[] data = new Double[dataSize];
+
+        for (int i = 0; i < dataSize; i++) {
+            data[i] = distribution.sample();
+        }
+
+        return data;
+    }*/
+
+    public Double[][][] initializeAndPopulateMatrix(int dataSize, double[] means, double[] variances) {
+        int numRows = means.length;
+        int numCols = variances.length;
+
+        Double[][][] matrix = new Double[numRows][numCols][];
+
+        for (int i = 0; i < numRows; i++) {
+            for (int j = 0; j < numCols; j++) {
+                Double[] data =  generator.generateData(dataSize, means[i], variances[j]);
+                matrix[i][j] = data;
+            }
+        }
+        return matrix;
+    }
+
+    public static double mergeSortAndBenchmark(Double[] data, double mean, double variance, int numberOfExperiments,int warmUpRound) {
+        long totalTime = 0;
+        int experiment;
+
+        double theoreticalComplexity =(data.length*(Math.log(data.length)/Math.log(2)));
+
+        System.out.println(" _____________________________ Start ________________________________ ");
+        System.out.println(" Data Size() : "+data.length);
+        System.out.println(" Data  : "+ Arrays.toString(data));
+
+        for (experiment = 0; experiment < numberOfExperiments; experiment++) {
+            Double[] dataCopy = Arrays.copyOf(data, data.length);
+
+            long startTime = System.nanoTime();
+            MergeSort.sort(dataCopy);
+            long endTime = System.nanoTime();
+
+            totalTime += (endTime - startTime);
+
+        }
+
+
+
+
+        double averageTimeInNanoSeconds = (double) totalTime / numberOfExperiments;
+        System.out.println(" Time taken to sort: " +   averageTimeInNanoSeconds );
+
+        System.out.println(" theoretical Time  Complexity : "+theoreticalComplexity);
+
+        System.out.println(" Réel Time  Complexity : "+ MergeSort.complexity);
+
+        SortResult sortResult = new SortResult(
+                averageTimeInNanoSeconds,
+                theoreticalComplexity,
+                MergeSort.complexity,
+                "Merge Sort",
+                data,
+                new Date(),
+                experiment,
+                warmUpRound
+        );
+
+        // After sorting, store the result in the map
+        String key = "Size:" + data.length + " Mean:" + mean + " Variance:" + variance;
+        resultsMap.put(key, sortResult);
+
+        System.out.println(" _____________________________ end ________________________________ ");
+
+        // Save the result as before...
+        // Omitted for brevity
+
+        return averageTimeInNanoSeconds;
+    }
+
+    public static void main(String[] args) {
+
+
+        // Define means, variances, and data sizes
+        double[] means = {10, 20};
+        double[] variances = {2, 5};
+        int[] dataSizes = {500, 1000, 5000};
+        int warmUpRound = 100;
+
+        // JVM Warm-up
+        warmUpJVM(warmUpRound);
+
+        // Initialize and benchmark matrices for each data size
+        for (int dataSize : dataSizes) {
+            Double[][][] matrix = initializeAndPopulateMatrix(dataSize, means, variances);
+
+            for (int i = 0; i < means.length; i++) {
+                for (int j = 0; j < variances.length; j++) {
+                    System.out.println(" mean : "+means[i]+" varaince : "+variances[j]+"  size() :"+dataSize);
+                    //show data
+                    System.out.println(Arrays.toString(matrix[i][j]));
+
+                    // Benchmark and sort data
+                    double averageTime = mergeSortAndBenchmark(matrix[i][j], means[i], variances[j], 10,warmUpRound); // 10 experiments for example
+
+                    // Logic to handle and display averageTime and results...
+                }
+            }
+        }
+
+        for (String key : resultsMap.keySet()) {
+            SortResult result = resultsMap.get(key);
+            System.out.println("Key: " + key + ", Value: " + result);
+        }
+
+    }
+}
