@@ -123,15 +123,13 @@ public class SortResult {
 
     @Override
     public String toString() {
-        return "SortResult{" +
-                "elapsedTimeInNanoSeconds=" + elapsedTimeInNanoSeconds +
-                ", theoreticalComplexity=" + theoreticalComplexity +
-                ", actualComplexity=" + actualComplexity +
-                ", sortAlgorithm='" + sortAlgorithm + '\'' +
-                ", sortedData=" + Arrays.toString(sortedData) +
-                ", experimentDate=" + experimentDate +
-                ", experimentNumber=" + experimentNumber +
-                ", jvmWarmUpRounds=" + jvmWarmUpRounds +
-                '}';
+        return  "elapsedTimeInNanoSeconds=" + elapsedTimeInNanoSeconds +
+                "; theoreticalComplexity=" + theoreticalComplexity +
+                "; actualComplexity=" + actualComplexity +
+                "; sortAlgorithm='" + sortAlgorithm + '\'' +
+                "; sortedData=" + Arrays.toString(sortedData) +
+                "; experimentDate=" + experimentDate +
+                "; experimentNumber=" + experimentNumber +
+                "; jvmWarmUpRounds=" + jvmWarmUpRounds;
     }
 }

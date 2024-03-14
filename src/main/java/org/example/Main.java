@@ -14,6 +14,7 @@ public class Main {
 
 
         Map<String, SortResult> resultsMap = new HashMap<>();
+        ResultSaver saver = new ResultSaver("ResultFile");
 
 
         // Define means, variances, and data sizes
@@ -52,6 +53,13 @@ public class Main {
             SortResult result = resultsMap.get(key);
             System.out.println("Key: " + key + ", Value: " + result);
         }
+
+
+        // After filling the resultsMap with benchmark results
+        for (Map.Entry<String, SortResult> entry : resultsMap.entrySet()) {
+            saver.saveResult(entry.getKey(), entry.getValue());
+        }
+
 
     }
 }
