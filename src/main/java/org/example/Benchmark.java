@@ -68,7 +68,7 @@ public class Benchmark {
        //System.out.println(" Réel Time  Complexity : "+ MergeSort.complexity);
 
         SortResult sortResult = new SortResult(
-                dataSize, mean, variance,
+                 mean, variance,dataSize,
                 averageTimeInNanoSeconds,
                 theoreticalComplexity,
                 complixity,

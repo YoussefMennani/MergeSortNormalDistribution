@@ -1,5 +1,6 @@
 package org.example;
 
+import org.example.chart.SortResultSpiderChart;
 import org.example.interfaces.DataGenerator;
 import org.example.interfaces.Sorter;
 import org.example.mergeSort.MergeSort;
@@ -18,8 +19,8 @@ public class Main {
 
 
         // Define means, variances, and data sizes
-        double[] means = {10, 20};
-        double[] variances = {2, 5};
+        double[] means = {50,4};
+        double[] variances = {20, 50};
         int[] dataSizes = {500, 1000, 5000};
         int warmUpRounds = 100;
         int numberOfExperiments = 10;
@@ -56,9 +57,15 @@ public class Main {
 
 
         // After filling the resultsMap with benchmark results
-        for (Map.Entry<String, SortResult> entry : resultsMap.entrySet()) {
+/*        for (Map.Entry<String, SortResult> entry : resultsMap.entrySet()) {
             saver.saveResult(entry.getKey(), entry.getValue());
-        }
+        }*/
+
+
+        //data
+        SortResultSpiderChart demo = new SortResultSpiderChart("Sort Algorithm Performance", resultsMap);
+        demo.pack();
+        demo.setVisible(true);
 
 
     }
