@@ -67,7 +67,6 @@ public class MatrixGenerator {
 
     public MatrixGenerator(){
         generator = new NormalDistributionGenerator();
-        sorter = new MergeSort();
 
         resultsMap = new HashMap<>();
         saver = new ResultSaver("ResultFile");
@@ -118,20 +117,80 @@ public class MatrixGenerator {
         demo.setVisible(true);
     }
 
+    public void selectSortingAlgorithm() {
+        StdOut.println("\n=== Choisissez l'algorithme de tri ===");
+        StdOut.println("1. Merge Sort");
+        StdOut.println("2. Quick Sort"); // Supposons que vous ayez une classe QuickSort
+        // Ajoutez d'autres algorithmes de tri ici
+        StdOut.print("Sélectionnez une option : ");
+
+        int choice = StdIn.readInt();
+        switch (choice) {
+            case 1:
+                sorter = new MergeSort();
+                StdOut.println("Merge Sort sélectionné.");
+                break;
+            case 2:
+                sorter = new MergeSort(); // Assurez-vous d'avoir une classe QuickSort implémentant Sorter
+                StdOut.println("Quick Sort sélectionné.");
+                break;
+            // Ajoutez des cas supplémentaires pour d'autres algorithmes de tri
+            default:
+                StdOut.println("Option invalide, Merge Sort sélectionné par défaut.");
+                sorter = new MergeSort();
+        }
+    }
+
+
+
 
     public static void main(String[] args) {
         MatrixGenerator matrixGenerator = new MatrixGenerator();
 
-        matrixGenerator.meanInstanciation();
-        matrixGenerator.variancesInstanciation();
-        matrixGenerator.dataSizesInstanciation();
+        boolean exit = false;
+        while (!exit) {
+            StdOut.println("\n=== Menu ===");
+            StdOut.println("1. Choisir l'algorithme de tri");
+            StdOut.println("2. Initialiser les moyennes");
+            StdOut.println("3. Initialiser les variances");
+            StdOut.println("4. Initialiser les tailles de données");
+            StdOut.println("5. Générer des matrices aléatoires organisées");
+            StdOut.println("6. Afficher les résultats");
+            StdOut.println("7. Visualiser et analyser");
+            StdOut.println("0. Quitter");
+            StdOut.print("Sélectionnez une option : ");
 
-
-        matrixGenerator.generateOrganizedRandomMatrices();
-
-        matrixGenerator.show();
-
-        matrixGenerator.visualizationAndAnalysis();
+            int choice = StdIn.readInt();
+            switch (choice) {
+                case 1:
+                    matrixGenerator.selectSortingAlgorithm();
+                    break;
+                case 2:
+                    matrixGenerator.meanInstanciation();
+                    break;
+                case 3:
+                    matrixGenerator.variancesInstanciation();
+                    break;
+                case 4:
+                    matrixGenerator.dataSizesInstanciation();
+                    break;
+                case 5:
+                    matrixGenerator.generateOrganizedRandomMatrices();
+                    break;
+                case 6:
+                    matrixGenerator.show();
+                    break;
+                case 7:
+                    matrixGenerator.visualizationAndAnalysis();
+                    break;
+                case 0:
+                    exit = true;
+                    StdOut.println("Au revoir!");
+                    break;
+                default:
+                    StdOut.println("Option invalide, veuillez réessayer.");
+            }
+        }
     }
 
 }
